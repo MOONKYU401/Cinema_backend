@@ -6,7 +6,10 @@ const Ticket = require('../models/Ticket');
 router.post('/tickets', async (req, res) => {
   const { movieTitle, theater, date, time, seat, userEmail } = req.body;
 
-  if (!movieTitle || !theater || !date || !time || !seat) {
+  if (!movieTitle || !theater || !date || !time || !seat || seat.length === 0) {
+  return res.status(400).json({ message: 'All fields are required (including at least one seat)' });
+}
+ {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
