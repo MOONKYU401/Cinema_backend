@@ -61,5 +61,20 @@ router.get('/booked-seats', async (req, res) => {
   }
 });
 
+router.get('/tickets/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const ticket = await Ticket.findById(id);
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket not found' });
+    }
+    res.status(200).json(ticket);
+  } catch (err) {
+    console.error('Ticket lookup error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 
 module.exports = router;
