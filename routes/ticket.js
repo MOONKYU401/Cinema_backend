@@ -4,10 +4,11 @@ const Ticket = require('../models/Ticket');
 
 // POST /api/tickets
 router.post('/tickets', async (req, res) => {
+  console.log('BODY:', req.body);
   const { movieTitle, theater, date, time, seat, userEmail } = req.body;
 
-  if (!movieTitle || !theater || !date || !time || !seat || seat.length === 0) {
-    return res.status(400).json({ message: 'All fields are required (including at least one seat)' });
+  if (!movieTitle || !theater || !date || !time || !Array.isArray(seat) || seat.length === 0) {
+    return res.status(400).json({ message: 'All fields are required (seat must be array)' });
   }
 
   try {
@@ -15,8 +16,8 @@ router.post('/tickets', async (req, res) => {
     await newTicket.save();
     res.status(201).json({ message: 'Ticket saved successfully', ticket: newTicket });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Ticket save error:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
